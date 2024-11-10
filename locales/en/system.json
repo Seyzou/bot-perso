@@ -1,0 +1,22 @@
+{
+    "event": {
+        "autocomplete": { 
+            "fail": "> Oops! Something went wrong while trying to run this command. Please try again." 
+        },
+        "button": {
+            "fail": "> Oops! We encountered an error while processing this button. Please try again."
+        },
+        "modal": {
+            "fail": "> Oops! We encountered an error while processing this button. Please try again."
+        },
+        "command": {
+            "fail": "> Oops! There was an error executing this command. Please try again later.",
+            "devOnly": "> Sorry! This command is reserved for the developer of {{client}}. Please contact them for assistance.",
+            "underDev": "> Heads up! This bot is currently under development. Please check back later.",
+            "userPremium": "> Sorry! This command is only available to premium users. Consider upgrading your access.",
+            "userPremiumEnd": "> Your premium access has expired <t:{{duration}}:R>. Please renew your subscription to use premium commands.",
+            "guildPremium": "> Sorry! This command can only be used in a premium server. Please check your server's status.",
+            "guildPremiumEnd": "> This server's premium access has expired <t:{{duration}}:R>. Please renew the server's premium status to use premium commands."
+        }
+    }
+}
