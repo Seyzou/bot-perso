@@ -7,6 +7,7 @@ const { loadLanguages } = require("../../Structures/Handlers/LanguageHandler");
 const { ConnectMongo } = require("../../Schemas/index");
 const { Events, ActivityType, PresenceUpdateStatus } = require("discord.js");
 const { Logger } = require("../../Structures/Functions/index");
+const TwitchAlert = require("../../Structures/Functions/TwitchAlert");
 const logger = new Logger();
 
 class Ready extends Event {
@@ -27,16 +28,22 @@ class Ready extends Event {
           name: `Under Development`,
           type: ActivityType.Custom,
         },
+        {
+          name: `seymoii on twitch`,
+          type: ActivityType.Streaming,
+          url: "https://twitch.tv/seymoii",
+        },
       ];
       const activity = activitys[Math.floor(Math.random() * activitys.length)];
       client.user.setActivity(activity);
       client.user.setStatus(PresenceUpdateStatus.Idle);
-    }, 5000);
+    }, 10000);
 
     const { loadCommands } = new CommandHandler();
     const { loadComponents } = new ComponentHandler();
 
     try {
+      await TwitchAlert(client);
       await loadLanguages();
       await loadCommands(client, client.config.deploySlashOnReady);
       await loadComponents(client);

@@ -17,8 +17,6 @@ class Language extends Command {
             .setRequired(true)
             .addChoices([
               { name: "English", value: "en" },
-              { name: "বাংলা", value: "bn" },
-              { name: "Brazilian Português", value: "pt-br" },
               { name: "français", value: "fr" },
             ])
         ),

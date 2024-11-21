@@ -6,6 +6,13 @@ module.exports = {
   mongoUrl: process.env.mongoUrl,
   clientId: process.env.clientId,
   logChannel: process.env.logChannel,
+
+  twitch: {
+    client_id: process.env.twitchId,
+    client_secret: process.env.twitchToken,
+    channel_name: "seymoii"
+  },
+
   deploySlashOnReady: true,
   underDevelopment: true,
   developers: [
@@ -21,6 +28,6 @@ module.exports = {
       id: "1208769358214602793",
     },
   ],
-  betaTestGuilds: [],
+  betaTestGuilds: ["1208769358214602793"],
   logWebhook: process.env.logWebhook,
 };

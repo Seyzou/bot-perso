@@ -55,7 +55,7 @@ class Help extends Command {
       } catch (error) {
         console.log(error);
       }
-    };
+    };  
 
     await client.application.commands
       .fetch()
