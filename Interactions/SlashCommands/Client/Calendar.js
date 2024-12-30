@@ -3,10 +3,9 @@ const { SlashCommandBuilder, EmbedBuilder, Colors, PermissionFlagsBits } = requi
 const { t } = require("i18next");
 const TwitchAPI = require('node-twitch').default
 const config = require("../../../config");
-
 const twitch = new TwitchAPI({
-    client_id: config.twitch.client_id,
-    client_secret: config.twitch.client_secret
+  client_id: config.twitch.client_id,
+  client_secret: config.twitch.client_secret
 })
 
 class Calendar extends Command {
@@ -14,7 +13,7 @@ class Calendar extends Command {
     super(client, dir, {
       data: new SlashCommandBuilder()
         .setName("calendar")
-        .setDescription("Show the calendar")
+        .setDescription("Affiche le programme des streams à venir")
         .setDMPermission(false),
       options: {
         //  premiumGuild: true,
@@ -35,103 +34,49 @@ class Calendar extends Command {
       const r = data.data[0]
       if (r) IsStream = true;
     })
-    let c = await client.db.calendarData.findOne(
-      {
-        guildId: interaction.guildId,
-      }
-    );
     const embed = new EmbedBuilder()
       .setColor(Colors.Yellow)
-      .setTitle("🗓️ Calendar of the week");
-      if (IsStream) {
-        embed.setDescription(`> ### I'm on stream right now ! [<:twitch:1308559652111519806> Clic here to see](https://twitch.tv/${client.config.twitch.channel_name})`)
-        .setThumbnail("https://cdn.discordapp.com/attachments/1308564541394649171/1308564612081389668/a5c64be4ef196c530849132e9e56f449.gif?ex=673e6743&is=673d15c3&hm=9a44106aa5f9e10e62f844784810e41f4cddb7eb925af9d4cf4644f3ab37f190&")
-      };
-    if (!c) {
-      c = await client.db.calendarData.create({
-        guildId: interaction.guildId,
+      .setTitle("`Programme                          `");
+
+    if (IsStream) {
+      embed.setDescription(`> ### Je stream actuellement! [<:twitch:1309109886751211601> Clic here to see](https://twitch.tv/${client.config.twitch.channel_name})`)
+        .setThumbnail("https://cdn.discordapp.com/attachments/1308564541394649171/1311470662426165248/SEY_Persostream.png?ex=6759747b&is=675822fb&hm=1edcbc290a4248b8bb086671062475b47e50b62399a5b677c73c1a3964681ef0&")
+    };
+    const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    const fields = [];
+
+    for (const day of daysOfWeek) {
+      let calendarDay = await client.db.calendarData.findOne({ day });
+      if (!calendarDay) {
+        calendarDay = new client.db.calendarData({ day, events: [] });
+        await calendarDay.save();
+      }
+
+      const events = calendarDay.events
+        .sort((a, b) => parseInt(a.start.replace(":", "")) - parseInt(b.start.replace(":", ""))) // Trier par heure de début
+        .map(event => `\`${event.start}\` - \`${event.end}\` : *${event.description}*`)
+        .join('\n') || "`Aucun stream prévu`";
+
+      fields.push({
+        name: formatDay(day),
+        value: events,
+        inline: true
       });
-      embed.addFields(
-        {
-          name: "Monday",
-          value: `${c.monday == "undefined" ? "`None`" : c.monday}`,
-          inline: true
-        },
-        {
-          name: "Tuesday",
-          value: `${c.tuesday == "undefined" ? "`None`" : c.tuesday}`,
-          inline: true
-        },
-        {
-          name: "Wednesday",
-          value: `${c.wednesday == "undefined" ? "`None`" : c.wednesday}`,
-          inline: true
-        },
-        {
-          name: "Thursday",
-          value: `${c.thursday == "undefined" ? "`None`" : c.thursday}`,
-          inline: true
-        },
-        {
-          name: "Friday",
-          value: `${c.friday == "undefined" ? "`None`" : c.friday}`,
-          inline: true
-        },
-        {
-          name: "Saturday",
-          value: `${c.saturday == "undefined" ? "`None`" : c.saturday}`,
-          inline: true
-        },
-        {
-          name: "Sunday",
-          value: `${c.sunday == "undefined" ? "`None`" : c.sunday}`,
-          inline: false
-        },
-
-      )
-      await interaction.reply({ embeds: [embed], content: "" });
-    } else {
-      embed.addFields(
-        {
-          name: "Monday",
-          value: `${c.monday == "undefined" ? "`None`" : c.monday}`,
-          inline: true
-        },
-        {
-          name: "Tuesday",
-          value: `${c.tuesday == "undefined" ? "`None`" : c.tuesday}`,
-          inline: true
-        },
-        {
-          name: "Wednesday",
-          value: `${c.wednesday == "undefined" ? "`None`" : c.wednesday}`,
-          inline: true
-        },
-        {
-          name: "Thursday",
-          value: `${c.thursday == "undefined" ? "`None`" : c.thursday}`,
-          inline: true
-        },
-        {
-          name: "Friday",
-          value: `${c.friday == "undefined" ? "`None`" : c.friday}`,
-          inline: true
-        },
-        {
-          name: "Saturday",
-          value: `${c.saturday == "undefined" ? "`None`" : c.saturday}`,
-          inline: true
-        },
-        {
-          name: "Sunday",
-          value: `${c.sunday == "undefined" ? "`None`" : c.sunday}`,
-          inline: false
-        },
-
-      )
-      await interaction.reply({ embeds: [embed], content: "" });
     }
+
+    embed.addFields(fields)
+    await interaction.reply({ embeds: [embed] })
   }
 }
+
+function formatDay(content) {
+  return content.replace("Monday", "Lundi")
+    .replace("Tuesday", "Mardi")
+    .replace("Wednesday", "Mercredi")
+    .replace("Thursday", "Jeudi")
+    .replace("Friday", "Vendredi")
+    .replace("Saturday", "Samedi")
+    .replace("Sunday", "Dimanche")
+};
 
 module.exports = Calendar;

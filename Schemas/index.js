@@ -4,7 +4,11 @@ const premiumDatas = require("./Server/PremiumDatas");
 const languageDatas = require("./Server/LanguageData");
 const redeemCodes = require("./Bot/RedeemCode");
 const userPremiumDatas = require("./User/UserPremium");
-const calendarData = require("./Calendar/CalendarData");
+const calendarData = require("./Calendar/Calendar");
+const PluginsData = require("./Server/Plugins");
+const MemberDatas = require("./User/MemberDatas");
+const GameKeys = require("./GameKeys/GameKey");
+const AchievementsData = require("./User/Achievements");
 const { Logger } = require("../Structures/Functions/index");
 const logger = new Logger();
 /**
@@ -35,4 +39,8 @@ module.exports = {
   userPremiumDatas,
   languageDatas,
   calendarData,
+  PluginsData,
+  MemberDatas,
+  GameKeys,
+  AchievementsData
 };

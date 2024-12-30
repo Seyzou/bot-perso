@@ -43,6 +43,12 @@ class Ready extends Event {
     const { loadComponents } = new ComponentHandler();
 
     try {
+      await ConnectMongo(client);
+    } catch (error) {
+      logger.error(error);
+    }
+
+    try {
       await TwitchAlert(client);
       await loadLanguages();
       await loadCommands(client, client.config.deploySlashOnReady);
@@ -53,11 +59,7 @@ class Ready extends Event {
 
     logger.success(`${client.user.username}(#${client.cluster.id}) is ready!`);
 
-    try {
-      await ConnectMongo(client);
-    } catch (error) {
-      logger.error(error);
-    }
+
   }
 }
 

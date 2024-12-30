@@ -7,7 +7,7 @@ class Help extends Command {
     super(client, dir, {
       data: new SlashCommandBuilder()
         .setName("help")
-        .setDescription("help command"),
+        .setDescription("Affiche toutes les commandes"),
     });
   }
 
@@ -19,6 +19,9 @@ class Help extends Command {
   async execute(interaction, client) {
     let adminCmd = [];
     let clientCmd = [];
+    let funCmd = [];
+    let currencyCmd = [];
+    let lvlCmd = [];
     let othersCmd = [];
 
     const cmdPush = (category, subCmd, command) => {
@@ -42,6 +45,36 @@ class Help extends Command {
                 inline: true,
               });
             break;
+          case "Fun": {
+            if (subCmd.length !== 0) funCmd.push(...subCmd);
+            else
+              funCmd.push({
+                name: `</${command.name}:${command.id}>`,
+                value: command.description,
+                inline: true,
+              });
+            break;
+          }
+          case "Currency": {
+            if (subCmd.length !== 0) currencyCmd.push(...subCmd);
+            else
+              currencyCmd.push({
+                name: `</${command.name}:${command.id}>`,
+                value: command.description,
+                inline: true,
+              });
+            break;
+          }
+          case "Levels": {
+            if (subCmd.length !== 0) lvlCmd.push(...subCmd);
+            else
+              lvlCmd.push({
+                name: `</${command.name}:${command.id}>`,
+                value: command.description,
+                inline: true,
+              });
+            break;
+          }
           default:
             if (subCmd.length !== 0) othersCmd.push(...subCmd);
             else
@@ -55,7 +88,7 @@ class Help extends Command {
       } catch (error) {
         console.log(error);
       }
-    };  
+    };
 
     await client.application.commands
       .fetch()
@@ -80,26 +113,78 @@ class Help extends Command {
       });
     const embeds = [
       new EmbedBuilder()
-        .setTitle("Client Commands")
-        .addFields(clientCmd)
+        .setTitle("🌍 Global")
+        .addFields(
+          clientCmd.length !== 0
+            ? clientCmd
+            : {
+              name: "⠀",
+              value: "Aucune commande dans cette catégorie.",
+            }
+        )
         .setColor(Colors.DarkGreen),
 
       new EmbedBuilder()
-        .setTitle("Admin Commands")
-        .addFields(adminCmd)
+        .setTitle("<:currency:1319403790281080843> Monnaie")
+        .addFields(
+          currencyCmd.length !== 0
+            ? currencyCmd
+            : {
+              name: "⠀",
+              value: "Aucune commande dans cette catégorie.",
+            }
+        )
         .setColor(Colors.DarkGreen),
 
       new EmbedBuilder()
-        .setTitle("Other Commands")
+        .setTitle("⭐ Levels")
+        .addFields(
+          lvlCmd.length !== 0
+            ? lvlCmd
+            : {
+              name: "⠀",
+              value: "Aucune commande dans cette catégorie.",
+            }
+        )
+        .setColor(Colors.DarkGreen),
+
+
+      new EmbedBuilder()
+        .setTitle("🤡 Fun")
+        .addFields(
+          funCmd.length !== 0
+            ? funCmd
+            : {
+              name: "⠀",
+              value: "Aucune commande dans cette catégorie.",
+            }
+        )
+        .setColor(Colors.DarkGreen),
+
+      new EmbedBuilder()
+        .setTitle("❔ Autres")
         .addFields(
           othersCmd.length !== 0
             ? othersCmd
             : {
-                name: "⠀",
-                value: "No command available in this category.",
-              }
+              name: "⠀",
+              value: "Aucune commande dans cette catégorie.",
+            }
         )
         .setColor(Colors.DarkGreen),
+        
+      new EmbedBuilder()
+        .setTitle("🛠️ Admin")
+        .addFields(
+          adminCmd.length !== 0
+            ? adminCmd
+            : {
+              name: "⠀",
+              value: "Aucune commande dans cette catégorie.",
+            }
+        )
+        .setColor(Colors.DarkGreen),
+
     ];
 
     await PaginationEmbed(interaction, embeds);

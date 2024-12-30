@@ -7,7 +7,7 @@ class Ping extends Command {
     super(client, dir, {
       data: new SlashCommandBuilder()
         .setName("ping")
-        .setDescription("To check bot ping!")
+        .setDescription("Affiche la latence du bot")
         .setDMPermission(false),
       options: {
         //  premiumGuild: true,

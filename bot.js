@@ -15,6 +15,7 @@ const client = new BotClient({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildVoiceStates,
   ],
   partials: [Partials.Channel, Partials.User, Partials.GuildMember],
   shards: ClusterClient.getInfo().SHARD_LIST,
